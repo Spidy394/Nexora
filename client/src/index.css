@@ -5,6 +5,14 @@
   font-family: "Outfit", sans-serif;
 }
 
-@theme{
-    --color-primary: #5044E5
+@theme {
+  --color-primary: #5044e5;
+}
+
+.reset-tw, .reset-tw *{
+  all: revert !important;
+}
+
+.cl-drawerRoot{
+  z-index: 10;
 }
