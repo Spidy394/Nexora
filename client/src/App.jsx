@@ -1,17 +1,16 @@
-import React from 'react'
+import React from "react";
 
-import { Route, Routes } from "react-router-dom"
-import Home from './pages/Home'
-import Layout from './pages/Layout'
-import Dashboard from "./pages/Dashboard"
-import WriteArticle from "./pages/WriteArticle"
-import BlogTitles from "./pages/BlogTitles"
-import GenerateImages from "./pages/GenerateImages"
-import RemoveBg from "./pages/RemoveBg"
-import RemoveObj from "./pages/RemoveObj"
-import ReviewResume from "./pages/ReviewResume"
-import Community from "./pages/Community"
-
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Layout from "./pages/Layout";
+import Dashboard from "./pages/Dashboard";
+import WriteArticle from "./pages/WriteArticle";
+import BlogTitles from "./pages/BlogTitles";
+import GenerateImages from "./pages/GenerateImages";
+import RemoveBg from "./pages/RemoveBg";
+import RemoveObj from "./pages/RemoveObj";
+import ReviewResume from "./pages/ReviewResume";
+import Community from "./pages/Community";
 
 const App = () => {
   return (
@@ -30,7 +29,7 @@ const App = () => {
         </Route>
       </Routes>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

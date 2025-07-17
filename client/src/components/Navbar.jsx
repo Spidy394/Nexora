@@ -18,7 +18,7 @@ const Navbar = () => {
         onClick={() => navigate("/")}
       />
 
-      { user ? (
+      {user ? (
         <UserButton />
       ) : (
         <button

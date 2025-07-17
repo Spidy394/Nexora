@@ -3,17 +3,17 @@ import React, { useState } from "react";
 
 const BlogTitles = () => {
   const blogCategories = [
-    'General',
-    'Tecnology', 
-    'Business', 
-    'Health',
-    'Lifestyle',
-    'Education',
-    'Travel',
-    'Food'
+    "General",
+    "Tecnology",
+    "Business",
+    "Health",
+    "Lifestyle",
+    "Education",
+    "Travel",
+    "Food",
   ];
 
-  const [selectedGategory, setSeclectedGategory] = useState('General');
+  const [selectedGategory, setSeclectedGategory] = useState("General");
   const [input, setInput] = useState("");
 
   const submitHandler = async (e) => {

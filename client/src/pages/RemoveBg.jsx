@@ -28,7 +28,9 @@ const RemoveBg = () => {
           required
         />
 
-        <p className="text-sm text-gray-500 font-light mt-1">Supports JPG, PNG, and Other image formats</p>
+        <p className="text-sm text-gray-500 font-light mt-1">
+          Supports JPG, PNG, and Other image formats
+        </p>
 
         <button className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#f6ab41] to-[#ff4938] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer">
           <Eraser className="w-5" />
@@ -46,7 +48,9 @@ const RemoveBg = () => {
         <div className="flex-1 flex justify-center items-center">
           <div className="text-sm flex flex-col items-center gap-5 text-gray-400">
             <Eraser className="w-9 h-9" />
-            <p>Upload an image and click "Remove background" to get started...</p>
+            <p>
+              Upload an image and click "Remove background" to get started...
+            </p>
           </div>
         </div>
       </div>

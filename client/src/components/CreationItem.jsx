@@ -31,7 +31,9 @@ const CreationItem = ({ item }) => {
             </div>
           ) : (
             <div className="mt-3 h-full overscroll-y-scroll text-sm text-slate-700">
-              <div className="reset-tw"><Markdown>{item.content}</Markdown></div>
+              <div className="reset-tw">
+                <Markdown>{item.content}</Markdown>
+              </div>
             </div>
           )}
         </div>

@@ -48,11 +48,20 @@ const Testimonial = () => {
             className="p-8 m-4 max-w-xs rounded-lg bg-[#FDFDFE] shadow-lg border border-gray-100 hover:-translate-y-1 transition duration-300 cursor-pointer"
           >
             <div className="flex items-center gap-1">
-              {Array(5).fill(0).map((_, index) => (
-                <img
-                  key={index} 
-                  src={index < testimonial.rating ? assets.star_icon : assets.star_dull_icon} className="size-4" alt="star"/>
-              ))}
+              {Array(5)
+                .fill(0)
+                .map((_, index) => (
+                  <img
+                    key={index}
+                    src={
+                      index < testimonial.rating
+                        ? assets.star_icon
+                        : assets.star_dull_icon
+                    }
+                    className="size-4"
+                    alt="star"
+                  />
+                ))}
             </div>
             <p className="text-gray-500 text-sm my-5">
               "{testimonial.content}"

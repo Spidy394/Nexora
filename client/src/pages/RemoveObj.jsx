@@ -29,7 +29,9 @@ const RemoveObj = () => {
           required
         />
 
-        <p className="mt-6 text-sm font-medium">Describe object to be removed</p>
+        <p className="mt-6 text-sm font-medium">
+          Describe object to be removed
+        </p>
         <textarea
           onChange={(e) => setObject(e.target.value)}
           value={object}
