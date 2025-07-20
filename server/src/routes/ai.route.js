@@ -10,13 +10,13 @@ import {
 } from "../controllers/ai.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
-const router = express.Router();
+const aiRouter = express.Router();
 
-router.post("/generate-article", auth, generateArticle);
-router.post("/generate-blog-title", auth, generateBlogTitle);
-router.post("/generate-image", auth, generateImage);
-router.post("/remove-bg", upload.single("imgae"), auth, removeBackground);
-router.post("/generate-object", upload.single("imgae"), auth, removeObject);
-router.post("/resume-review", upload.single("resume"), auth, reviewResume);
+aiRouter.post("/generate-article", auth, generateArticle);
+aiRouter.post("/generate-blog-title", auth, generateBlogTitle);
+aiRouter.post("/generate-image", auth, generateImage);
+aiRouter.post("/remove-background", upload.single("imgae"), auth, removeBackground);
+aiRouter.post("/generate-object", upload.single("imgae"), auth, removeObject);
+aiRouter.post("/resume-review", upload.single("resume"), auth, reviewResume);
 
-export default router;
+export default aiRouter;
