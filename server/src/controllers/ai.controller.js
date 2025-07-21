@@ -3,8 +3,8 @@ import sql from "../configs/db.js";
 import { clerkClient } from "@clerk/express";
 import axios from "axios";
 import { v2 as cloudinary } from "cloudinary";
-import fs from 'fs';
-import pdf from 'pdf-parse/lib/pdf-parse.js'
+import fs from "fs";
+import pdf from "pdf-parse/lib/pdf-parse.js";
 
 const AI = new OpenAI({
   apiKey: process.env.GEMINI_KEY,
@@ -14,7 +14,7 @@ const AI = new OpenAI({
 export const generateArticle = async (req, res) => {
   try {
     const { userId } = req.auth();
-    const { prompt, lenght } = req.body;
+    const { prompt, length } = req.body;
     const plan = req.plan;
     const free_usage = req.free_usage;
 
@@ -40,7 +40,7 @@ export const generateArticle = async (req, res) => {
         },
       ],
       temperature: 0.7,
-      max_completion_tokens: lenght,
+      max_completion_tokens: length,
     });
 
     const content = response.choices[0].message.content;
@@ -83,7 +83,7 @@ export const generateBlogTitle = async (req, res) => {
         {
           role: "system",
           content:
-            'You are a creative title generator for blog posts, dev projects, and technical articles. The tone should match Shubho\'s personal style: confident, sharp, slightly bold, and appealing to tech‑savvy readers in their late teens to mid‑20s.\n\nFollow these rules:\n\nStyle & Personality\n• Keep it catchy, modern, and a bit edgy when appropriate.\n• Use punchy words or metaphors, but avoid clickbait.\n• Reflect curiosity, ambition, or a hint of rebellious drive.\n• Feel free to use Bengali-flavored references, music/film-inspired twists, or hacker/coding lingo subtly.\n\nStructure & Formats\n• Keep titles under 12 words.\n• Use formats like:\n– "How I…"\n– "Why You Should…"\n– "X Ways to…"\n– "Breaking Down…"\n– "Inside the Build: [Project/Tool]"\n– Wordplay/juxtaposition: "Beyond the Brackets", "Code, Coffee & Chaos"\n\nAudience Focus\n• Write for young devs, hackers, students, or tech-curious minds.\n• Suggest energy, motivation, or unique POV.\n• Avoid bland or overly formal titles.\n\nClarity & Relevance\n• Clearly reflect the topic\'s theme (tech, coding, dev life, AI, etc.).\n• Avoid filler or vague hooks—intrigue with meaning.\n• If it\'s part of a series, include continuity tags (e.g., "#1", "Devlog").\n\nWhen in doubt, make it something Shubho would be proud to post on GitHub or LinkedIn—with a vibe that says: "I build cool shit and I know what I\'m doing."',
+            "You are a creative blog title generator for dev projects, technical articles, and hacker-style content.\n\nYour task:\nGenerate 5 unique and catchy blog titles based on the following inputs:\n- Keyword: ${input}\n- Category: ${selectedCategory.text}\n\nFor each title, include:\n1. A bold, well-crafted title (max 12 words)\n2. Level: Beginner, Intermediate, or Advanced — based on technical depth\n3. Use Case: Choose one — Tutorial, Opinion, Project Showcase, Thought Leadership, Explainer, or Creative Use\n4. Description: A 1-line explanation of what the blog post is about\n\nInstructions:\n- Use **appropriate emojis** in the output to enhance readability, tone, and engagement — without overdoing it.\n- Apply **proper Markdown styling** to format your output cleanly and professionally.\n- Use bold for titles and labels (Level, Use Case, Description).\n- Structure your response as a clean, numbered Markdown list.\n\nStyle & Personality:\n- Be confident, slightly bold, and modern in tone\n- Use punchy words, metaphors, or subtle dev/hacker lingo\n- Avoid clickbait or bland language\n- You may include Bengali cultural, music, or film references where relevant\n- Make it feel like something a young dev (18–25) would proudly post on GitHub, Dev.to, or LinkedIn\n\nOutput Format Example (Markdown):\n\n## 1. **How I Made My Coffee with AI ☕🤖**  \n   - **Level:** Beginner  \n   - **Use Case:** Tutorial  \n   - **Description:** A fun walkthrough on automating coffee using AI tools",
         },
         {
           role: "user",
@@ -91,7 +91,7 @@ export const generateBlogTitle = async (req, res) => {
         },
       ],
       temperature: 0.7,
-      max_completion_tokens: 100,
+      max_completion_tokens: 500,
     });
 
     const content = response.choices[0].message.content;
@@ -148,11 +148,13 @@ export const generateImage = async (req, res) => {
     ).toString("base64")}`;
 
     const { secure_url } = await cloudinary.uploader.upload(base64Image, {
-      folder: "Nexora/generate"
+      folder: "Nexora/generate",
     });
 
     await sql`INSERT INTO creations ( user_id, prompt, content, type, publish )
-              VALUES (${userId}, ${prompt}, ${secure_url}, 'image', ${publish ?? false})`;
+              VALUES (${userId}, ${prompt}, ${secure_url}, 'image', ${
+      publish ?? false
+    })`;
 
     res.json({ success: true, content: secure_url });
   } catch (error) {
@@ -164,7 +166,7 @@ export const generateImage = async (req, res) => {
 export const removeBackground = async (req, res) => {
   try {
     const { userId } = req.auth();
-    const { photo } = req.file;
+    const photo = req.file;
     const plan = req.plan;
 
     if (plan !== "pro") {
@@ -176,11 +178,13 @@ export const removeBackground = async (req, res) => {
     }
 
     const { secure_url } = await cloudinary.uploader.upload(photo.path, {
-      transformation: [{
-        effect: "background_removal",
-        background_removal: "remove_the_background"
-      }],
-      folder: "Nexora/bg-remove"
+      transformation: [
+        {
+          effect: "background_removal",
+          background_removal: "remove_the_background",
+        },
+      ],
+      folder: "Nexora/bg-remove",
     });
 
     await sql`INSERT INTO creations ( user_id, prompt, content, type )
@@ -209,20 +213,22 @@ export const removeObject = async (req, res) => {
     }
 
     const { public_id } = await cloudinary.uploader.upload(photo.path, {
-      folder: "Nexora/obj-remove"
+      folder: "Nexora/obj-remove",
     });
 
     const imageURL = cloudinary.url(public_id, {
-      transformation: [{
-        effect: `gen_removal:${object}`,
-      }],
-      resource_type: 'image'
-    })
+      transformation: [
+        {
+          effect: `gen_remove:prompt_(${object})`,
+        },
+      ],
+      resource_type: "image",
+    });
 
     await sql`INSERT INTO creations ( user_id, prompt, content, type )
               VALUES ( ${userId}, ${`Removed ${object} from image`}, ${imageURL}, 'image' )`;
 
-    res.json({ success: true, content: secure_url });
+    res.json({ success: true, content: imageURL });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });
@@ -243,24 +249,61 @@ export const reviewResume = async (req, res) => {
       });
     }
 
-    if(resume.size > 5 * 1024 * 1024){
-      return res.json({ success: false, message: "Resume file size exceeds allowed size (5mb)."})
+    if (resume.size > 5 * 1024 * 1024) {
+      return res.json({
+        success: false,
+        message: "Resume file size exceeds allowed size (5mb).",
+      });
     }
 
     const dataBuffer = fs.readFileSync(resume.path);
-    const pdfData = await pdf(dataBuffer)
+    const pdfData = await pdf(dataBuffer);
 
-    const prompt = `Review the following resume and provide constructive feedback on its strenght, weakness, and areas for improvement. Resume Content:n\n\n${pdfData.text}`
+    const prompt = `You are a professional career coach and resume expert. When given the extracted text content of a resume, your task is to review it thoroughly and provide a detailed, constructive, and professional analysis. Your response should be structured using appropriate Markdown formatting for better readability and elegance. Include emojis where suitable to enhance clarity and engagement, but keep the tone professional.
+
+    Your review should include the following sections:
+
+    ⭐ Overall Score: [X/10]
+    Rate the resume on a scale of 1-10 with brief justification.
+
+    📌 Strengths
+    Highlight the key strengths of the resume such as formatting, clarity, relevant skills, achievements, and alignment with industry standards.
+
+    ⚠️ Weaknesses
+    Point out any shortcomings or areas where the resume could be improved. This could include poor formatting, vague descriptions, lack of quantifiable achievements, grammar issues, or irrelevant information.
+
+    💡 Areas for Improvement
+    Offer actionable suggestions to improve the resume. This may include:
+
+    Enhancing section headings
+
+    Optimizing content for ATS (Applicant Tracking Systems)
+
+    Adding metrics or impact-driven language
+
+    Reorganizing layout for better flow
+
+    Tailoring for a specific role or industry
+
+    🔍 ATS Optimization Notes
+    Keywords and phrases that should be included
+    Formatting considerations for ATS systems
+    Industry-standard terminology suggestions
+
+    ✅ Overall Impression
+    Summarize your thoughts in 2–3 lines. State whether the resume is strong, average, or needs significant improvement and whether it's ready to be sent out for applications.
+
+    Resume Content:\n\n${pdfData.text}`;
 
     const response = await AI.chat.completions.create({
-      model: 'gemini-2.0-flash',
-      messages: [{role: "user", content: prompt}],
+      model: "gemini-2.0-flash",
+      messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
-      max_completion_tokens: 1000
-    })
+      max_completion_tokens: 1000,
+    });
 
-    const content = response.choices[0].message.content
- 
+    const content = response.choices[0].message.content;
+
     await sql`INSERT INTO creations ( user_id, prompt, content, type )
               VALUES ( ${userId}, 'Review the uploaded resume', ${content}, 'resume-resview' )`;
 

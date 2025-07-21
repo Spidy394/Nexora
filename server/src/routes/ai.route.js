@@ -15,8 +15,8 @@ const aiRouter = express.Router();
 aiRouter.post("/generate-article", auth, generateArticle);
 aiRouter.post("/generate-blog-title", auth, generateBlogTitle);
 aiRouter.post("/generate-image", auth, generateImage);
-aiRouter.post("/remove-background", upload.single("imgae"), auth, removeBackground);
-aiRouter.post("/generate-object", upload.single("imgae"), auth, removeObject);
+aiRouter.post("/remove-background", upload.single("image"), auth, removeBackground);
+aiRouter.post("/remove-object", upload.single("image"), auth, removeObject);
 aiRouter.post("/resume-review", upload.single("resume"), auth, reviewResume);
 
 export default aiRouter;

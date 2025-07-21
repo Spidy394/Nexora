@@ -1,21 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { dummyCreationData } from "../assets/assets";
+import React, { useEffect, useState, useCallback } from "react";
 import { Gem, Sparkle } from "lucide-react";
-import { Protect } from "@clerk/clerk-react";
+import { Protect, useAuth } from "@clerk/clerk-react";
 import CreationItem from "../components/CreationItem";
+import axios from "axios";
+import toast from "react-hot-toast";
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const Dashboard = () => {
   const [creations, setCreations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const getDashboardData = async () => {
-    setCreations(dummyCreationData);
-  };
+  const { getToken } = useAuth();
+
+  const getDashboardData = useCallback(async () => {
+    try {
+      const { data } = await axios.get("/api/ai/user/get-user-creations", {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
+
+      if (data.success) {
+        setCreations(data.creations);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+
+    setLoading(false);
+  }, [getToken]);
 
   useEffect(() => {
     getDashboardData();
-  }, []);
+  }, [getDashboardData]);
 
-  return (
+  return !loading ? (
     <div className="h-full overflow-y-scroll p-6">
       <div className="flex justify-start gap-4 flex-wrap">
         {/* total creations card */}
@@ -51,6 +71,10 @@ const Dashboard = () => {
           <CreationItem key={item.id} item={item} />
         ))}
       </div>
+    </div>
+  ) : (
+    <div className="flex justify-center items-center h-full">
+      <span className="w-10 h-10 my-1 rounded-full border-3 border-primary border-t-transparent animate-spin"></span>
     </div>
   );
 };
