@@ -31,18 +31,22 @@ const Layout = () => {
           />
         )}
       </nav>
-      <div className="flex-1 w-full flex h-[calc(100vh-64px)]">
-        {/* Mobile backdrop */}
+      <div className="flex-1 w-full flex h-[calc(100vh-64px)] relative">
+        <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
+        <div
+          className={`flex-1 bg-[#f4f7fb] transition-all duration-300 ${
+            sidebar ? "max-sm:blur-sm max-sm:brightness-75" : ""
+          }`}
+        >
+          <Outlet />
+        </div>
+        {/* Mobile backdrop for closing sidebar */}
         {sidebar && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-30 sm:hidden"
+            className="fixed inset-0 z-30 sm:hidden"
             onClick={() => setSidebar(false)}
           />
         )}
-        <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
-        <div className="flex-1 bg-[#f4f7fb]">
-          <Outlet />
-        </div>
       </div>
     </div>
   ) : (

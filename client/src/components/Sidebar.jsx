@@ -29,7 +29,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
   const { signOut, openUserProfile } = useClerk();
   return (
     <div
-      className={`w-60 bg-white border-r border-gray-200 flex flex-col justify-between items-center max-sm:fixed max-sm:top-14 max-sm:left-0 max-sm:bottom-0 max-sm:z-40 ${
+      className={`w-60 bg-white border-r border-gray-200 flex flex-col justify-between items-center max-sm:fixed max-sm:top-14 max-sm:left-0 max-sm:bottom-0 max-sm:z-50 ${
         sidebar ? "translate-x-0" : "max-sm:-translate-x-full"
       } transition-all duration-300 ease-in-out`}
     >
