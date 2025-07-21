@@ -12,7 +12,7 @@ const Layout = () => {
 
   return user ? (
     <div className="flex flex-col items-start justify-start h-screen">
-      <nav className="w-full px-8 min-h-14 flex items-center justify-between border-b border-gray-200">
+      <nav className="w-full px-8 min-h-14 flex items-center justify-between border-b border-gray-200 bg-white relative z-50">
         <img
           className="cursor-pointer w-32 sm:w-44"
           src={assets.logo}
@@ -32,6 +32,13 @@ const Layout = () => {
         )}
       </nav>
       <div className="flex-1 w-full flex h-[calc(100vh-64px)]">
+        {/* Mobile backdrop */}
+        {sidebar && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 sm:hidden"
+            onClick={() => setSidebar(false)}
+          />
+        )}
         <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
         <div className="flex-1 bg-[#f4f7fb]">
           <Outlet />
